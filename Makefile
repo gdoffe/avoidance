@@ -129,29 +129,29 @@ cogip_api/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cogip_api.dir/build.make CMakeFiles/cogip_api.dir/build
 .PHONY : cogip_api/fast
 
-lib/avoidance/avoidance.o: lib/avoidance/avoidance.cpp.o
-.PHONY : lib/avoidance/avoidance.o
+lib/avoidance/Avoidance.o: lib/avoidance/Avoidance.cpp.o
+.PHONY : lib/avoidance/Avoidance.o
 
 # target to build an object file
-lib/avoidance/avoidance.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cogip_api.dir/build.make CMakeFiles/cogip_api.dir/lib/avoidance/avoidance.cpp.o
-.PHONY : lib/avoidance/avoidance.cpp.o
+lib/avoidance/Avoidance.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cogip_api.dir/build.make CMakeFiles/cogip_api.dir/lib/avoidance/Avoidance.cpp.o
+.PHONY : lib/avoidance/Avoidance.cpp.o
 
-lib/avoidance/avoidance.i: lib/avoidance/avoidance.cpp.i
-.PHONY : lib/avoidance/avoidance.i
+lib/avoidance/Avoidance.i: lib/avoidance/Avoidance.cpp.i
+.PHONY : lib/avoidance/Avoidance.i
 
 # target to preprocess a source file
-lib/avoidance/avoidance.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cogip_api.dir/build.make CMakeFiles/cogip_api.dir/lib/avoidance/avoidance.cpp.i
-.PHONY : lib/avoidance/avoidance.cpp.i
+lib/avoidance/Avoidance.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cogip_api.dir/build.make CMakeFiles/cogip_api.dir/lib/avoidance/Avoidance.cpp.i
+.PHONY : lib/avoidance/Avoidance.cpp.i
 
-lib/avoidance/avoidance.s: lib/avoidance/avoidance.cpp.s
-.PHONY : lib/avoidance/avoidance.s
+lib/avoidance/Avoidance.s: lib/avoidance/Avoidance.cpp.s
+.PHONY : lib/avoidance/Avoidance.s
 
 # target to generate assembly for a file
-lib/avoidance/avoidance.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cogip_api.dir/build.make CMakeFiles/cogip_api.dir/lib/avoidance/avoidance.cpp.s
-.PHONY : lib/avoidance/avoidance.cpp.s
+lib/avoidance/Avoidance.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cogip_api.dir/build.make CMakeFiles/cogip_api.dir/lib/avoidance/Avoidance.cpp.s
+.PHONY : lib/avoidance/Avoidance.cpp.s
 
 lib/cogip_defs/Coords.o: lib/cogip_defs/Coords.cpp.o
 .PHONY : lib/cogip_defs/Coords.o
@@ -200,30 +200,6 @@ lib/obstacles/Circle.s: lib/obstacles/Circle.cpp.s
 lib/obstacles/Circle.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cogip_api.dir/build.make CMakeFiles/cogip_api.dir/lib/obstacles/Circle.cpp.s
 .PHONY : lib/obstacles/Circle.cpp.s
-
-lib/obstacles/List.o: lib/obstacles/List.cpp.o
-.PHONY : lib/obstacles/List.o
-
-# target to build an object file
-lib/obstacles/List.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cogip_api.dir/build.make CMakeFiles/cogip_api.dir/lib/obstacles/List.cpp.o
-.PHONY : lib/obstacles/List.cpp.o
-
-lib/obstacles/List.i: lib/obstacles/List.cpp.i
-.PHONY : lib/obstacles/List.i
-
-# target to preprocess a source file
-lib/obstacles/List.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cogip_api.dir/build.make CMakeFiles/cogip_api.dir/lib/obstacles/List.cpp.i
-.PHONY : lib/obstacles/List.cpp.i
-
-lib/obstacles/List.s: lib/obstacles/List.cpp.s
-.PHONY : lib/obstacles/List.s
-
-# target to generate assembly for a file
-lib/obstacles/List.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cogip_api.dir/build.make CMakeFiles/cogip_api.dir/lib/obstacles/List.cpp.s
-.PHONY : lib/obstacles/List.cpp.s
 
 lib/obstacles/Obstacle.o: lib/obstacles/Obstacle.cpp.o
 .PHONY : lib/obstacles/Obstacle.o
@@ -297,30 +273,6 @@ lib/obstacles/ObstacleRectangle.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cogip_api.dir/build.make CMakeFiles/cogip_api.dir/lib/obstacles/ObstacleRectangle.cpp.s
 .PHONY : lib/obstacles/ObstacleRectangle.cpp.s
 
-lib/obstacles/obstacles.o: lib/obstacles/obstacles.cpp.o
-.PHONY : lib/obstacles/obstacles.o
-
-# target to build an object file
-lib/obstacles/obstacles.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cogip_api.dir/build.make CMakeFiles/cogip_api.dir/lib/obstacles/obstacles.cpp.o
-.PHONY : lib/obstacles/obstacles.cpp.o
-
-lib/obstacles/obstacles.i: lib/obstacles/obstacles.cpp.i
-.PHONY : lib/obstacles/obstacles.i
-
-# target to preprocess a source file
-lib/obstacles/obstacles.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cogip_api.dir/build.make CMakeFiles/cogip_api.dir/lib/obstacles/obstacles.cpp.i
-.PHONY : lib/obstacles/obstacles.cpp.i
-
-lib/obstacles/obstacles.s: lib/obstacles/obstacles.cpp.s
-.PHONY : lib/obstacles/obstacles.s
-
-# target to generate assembly for a file
-lib/obstacles/obstacles.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cogip_api.dir/build.make CMakeFiles/cogip_api.dir/lib/obstacles/obstacles.cpp.s
-.PHONY : lib/obstacles/obstacles.cpp.s
-
 lib/path/Pose.o: lib/path/Pose.cpp.o
 .PHONY : lib/path/Pose.o
 
@@ -378,18 +330,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... cogip_api"
-	@echo "... lib/avoidance/avoidance.o"
-	@echo "... lib/avoidance/avoidance.i"
-	@echo "... lib/avoidance/avoidance.s"
+	@echo "... lib/avoidance/Avoidance.o"
+	@echo "... lib/avoidance/Avoidance.i"
+	@echo "... lib/avoidance/Avoidance.s"
 	@echo "... lib/cogip_defs/Coords.o"
 	@echo "... lib/cogip_defs/Coords.i"
 	@echo "... lib/cogip_defs/Coords.s"
 	@echo "... lib/obstacles/Circle.o"
 	@echo "... lib/obstacles/Circle.i"
 	@echo "... lib/obstacles/Circle.s"
-	@echo "... lib/obstacles/List.o"
-	@echo "... lib/obstacles/List.i"
-	@echo "... lib/obstacles/List.s"
 	@echo "... lib/obstacles/Obstacle.o"
 	@echo "... lib/obstacles/Obstacle.i"
 	@echo "... lib/obstacles/Obstacle.s"
@@ -399,9 +348,6 @@ help:
 	@echo "... lib/obstacles/ObstacleRectangle.o"
 	@echo "... lib/obstacles/ObstacleRectangle.i"
 	@echo "... lib/obstacles/ObstacleRectangle.s"
-	@echo "... lib/obstacles/obstacles.o"
-	@echo "... lib/obstacles/obstacles.i"
-	@echo "... lib/obstacles/obstacles.s"
 	@echo "... lib/path/Pose.o"
 	@echo "... lib/path/Pose.i"
 	@echo "... lib/path/Pose.s"
