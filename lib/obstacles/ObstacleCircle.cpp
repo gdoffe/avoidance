@@ -1,5 +1,5 @@
 // Project includes
-#include "obstacles/Circle.hpp"
+#include "obstacles/ObstacleCircle.hpp"
 #include "utils.hpp"
 
 // System includes
@@ -9,13 +9,13 @@ namespace cogip {
 
 namespace obstacles {
 
-Circle::Circle(const cogip_defs::Coords &center, double radius)
+ObstacleCircle::ObstacleCircle(const cogip_defs::Coords &center, double radius)
     : Obstacle(center, radius)
 {
     update_bounding_box();
 }
 
-bool Circle::is_point_inside(const cogip_defs::Coords &p) const {
+bool ObstacleCircle::is_point_inside(const cogip_defs::Coords &p) const {
     double d = center_.distance(p);
 
     if (d * d > radius_ * radius_) {
@@ -26,7 +26,7 @@ bool Circle::is_point_inside(const cogip_defs::Coords &p) const {
     }
 }
 
-bool Circle::is_segment_crossing(const cogip_defs::Coords &a, const cogip_defs::Coords &b) const
+bool ObstacleCircle::is_segment_crossing(const cogip_defs::Coords &a, const cogip_defs::Coords &b) const
 {
     const cogip_defs::Coords &c = center_;
 
@@ -54,7 +54,7 @@ bool Circle::is_segment_crossing(const cogip_defs::Coords &a, const cogip_defs::
     return false;
 }
 
-cogip_defs::Coords Circle::nearest_point(const cogip_defs::Coords &p) const
+cogip_defs::Coords ObstacleCircle::nearest_point(const cogip_defs::Coords &p) const
 {
     cogip_defs::Coords vect(
         p.x() - center_.x(),
@@ -69,7 +69,7 @@ cogip_defs::Coords Circle::nearest_point(const cogip_defs::Coords &p) const
     );
 }
 
-bool Circle::is_line_crossing_circle(const cogip_defs::Coords &a, const cogip_defs::Coords &b) const
+bool ObstacleCircle::is_line_crossing_circle(const cogip_defs::Coords &a, const cogip_defs::Coords &b) const
 {
     const cogip_defs::Coords &c = center_;
 
@@ -95,6 +95,21 @@ bool Circle::is_line_crossing_circle(const cogip_defs::Coords &a, const cogip_de
     }
     else {
         return false;
+    }
+}
+
+void ObstacleCircle::update_bounding_box()
+{
+    if (radius_) {
+        double radius = radius_ * (1 + OBSTACLE_BOUNDING_BOX_MARGIN);
+
+        clear();
+
+        for (uint8_t i = 0; i < OBSTACLE_BOUNDING_BOX_VERTICES; i++) {
+            push_back(cogip_defs::Coords(
+                center_.x() + radius * cos(((double)i * 2 * M_PI) / (double)OBSTACLE_BOUNDING_BOX_VERTICES),
+                center_.y() + radius * sin(((double)i * 2 * M_PI) / (double)OBSTACLE_BOUNDING_BOX_VERTICES)));
+        }
     }
 }
 

@@ -33,7 +33,7 @@ namespace obstacles {
 using BoundingBox = cogip_defs::Polygon;
 
 /// An obstacle used to detect and avoid collisions.
-class Obstacle {
+class Obstacle : public cogip_defs::Polygon  {
 public:
     /// Constructor
     Obstacle(
@@ -43,12 +43,6 @@ public:
 
     /// Destructor
     virtual ~Obstacle() {};
-
-    /// Update bounding box.
-    void update_bounding_box();
-
-    /// Return bounding box polygon.
-    virtual BoundingBox & bounding_box() { return bounding_box_; };
 
     /// Check if the given point is inside the obstacle.
     /// @return true if point is inside, false otherwise

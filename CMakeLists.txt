@@ -32,7 +32,7 @@ include_directories(
 set(SOURCES
     lib/avoidance/Avoidance.cpp
     lib/cogip_defs/Coords.cpp
-    lib/obstacles/Circle.cpp
+    lib/obstacles/ObstacleCircle.cpp
     lib/obstacles/Obstacle.cpp
     lib/obstacles/ObstaclePolygon.cpp
     lib/obstacles/ObstacleRectangle.cpp
@@ -57,11 +57,25 @@ set_target_properties(test_avoidance PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 
+# Define the Python module directory (where your .pyx file is located)
+set(PYTHON_MODULE_DIR ${CMAKE_SOURCE_DIR}/applications/tests/avoidance)
+# Define the .pyx file to be compiled
+set(PYTHON_MODULE_SRC ${PYTHON_MODULE_DIR}/pyavoidance.pyx)
+
 # Add the cython transpile step
-cython_transpile(applications/tests/avoidance/pyavoidance.pyx LANGUAGE CXX OUTPUT_VARIABLE PYAVOIDANCE_CPP)
+cython_transpile(${PYTHON_MODULE_SRC}
+                LANGUAGE CXX
+                CYTHON_ARGS
+                    --cplus -3
+                OUTPUT_VARIABLE PYAVOIDANCE_CPP)
 
-# Add the resulting C++ file to the Python module target
-add_library(pyavoidance MODULE ${PYAVOIDANCE_CPP})
+# Define the Python extension using Cython
+python_add_library(pyavoidance MODULE WITH_SOABI ${PYAVOIDANCE_CPP})
 
-# Link the avoidance library (your existing C++ shared library)
-target_link_libraries(pyavoidance PRIVATE avoidance_lib)
+# Set output directory for the shared library (.so)
+set_target_properties(pyavoidance PROPERTIES
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/python_build/
+)
+
+# Link C++ libraries to the Cython module
+target_link_libraries(pyavoidance PRIVATE avoidance_lib Python::Module)

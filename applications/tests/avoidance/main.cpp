@@ -38,7 +38,7 @@ int main() {
     // Create a regular octagon with a 100mm radius
     std::vector<cogip::cogip_defs::Coords> octagon;
     double octRadius = 100;
-    double octCenterX = 1500, octCenterY = 2500;
+    double octCenterX = 1000, octCenterY = 1500;
     for (int i = 0; i < 8; ++i) {
         double angle = M_PI / 4 * i;
         octagon.push_back(cogip::cogip_defs::Coords(
@@ -55,8 +55,8 @@ int main() {
     avoidance.addDynamicObstacle(octagonObstacle);
 
     // Test the buildGraph() method
-    cogip::cogip_defs::Coords start(100, 100);   // Example start position
-    cogip::cogip_defs::Coords finish(1900, 2900); // Example finish position
+    cogip::cogip_defs::Coords start(250, 250);   // Example start position
+    cogip::cogip_defs::Coords finish(1750, 2750); // Example finish position
     std::cout << "Building the avoidance graph..." << std::endl;
     bool graphBuilt = avoidance.buildGraph(start, finish);
     if (graphBuilt) {

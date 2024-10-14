@@ -53,11 +53,16 @@ public:
     /// @return true if the point is inside an obstacle, false otherwise.
     bool is_point_in_obstacles(const cogip::cogip_defs::Coords &p, const cogip::obstacles::Obstacle *filter);
 
+    /// @brief Get computed avoidance path size.
+    ///
+    /// @return Number of pose in the path, start and stop pose included
+    size_t getPathSize() const;
+
     /// @brief Get pose at given index in the avoidance path
     ///
     /// @param index Pose index in the avoidance path
     /// @return cogip::cogip_defs::Coords Coordinates of the pose
-    cogip::cogip_defs::Coords getPose(uint8_t index) const;
+    cogip::cogip_defs::Coords getPathPose(uint8_t index) const;
 
     /// @brief Build avoidance graph between start and finish points
     /// @param start Start position
@@ -101,7 +106,7 @@ private:
     cogip::cogip_defs::Coords _startPose; ///< Start pose for the avoidance path
     cogip::cogip_defs::Coords _finishPose; ///< Finish pose for the avoidance path
 
-    std::deque<int> _pathChildren; ///< Indexes of valid points from the start to the finish in the computed path
+    std::deque<cogip::cogip_defs::Coords> _path; ///< Indexes of valid points from the start to the finish in the computed path
     bool _isAvoidanceComputed; ///< Flag indicating if the avoidance path has been successfully computed
 
     cogip::obstacles::ObstaclePolygon _borders; ///< Borders of the avoidance area, used to define the boundaries

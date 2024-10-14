@@ -14,6 +14,8 @@
 
 Avoidance::Avoidance(const cogip::obstacles::ObstaclePolygon &borders)
     : _validPointsCount(0), _isAvoidanceComputed(false), _borders(borders), _logger("Avoidance") {
+        _allObstacles.insert(&_fixedObstacles);
+        _allObstacles.insert(&_dynamicObstacles);
 }
 
 bool Avoidance::is_point_in_obstacles(const cogip::cogip_defs::Coords &p, const cogip::obstacles::Obstacle *filter)
@@ -37,26 +39,26 @@ bool Avoidance::is_point_in_obstacles(const cogip::cogip_defs::Coords &p, const 
 void Avoidance::validateObstaclePoints()
 {
     for (auto l: _allObstacles) {
-        for (auto obstacle: *l) {
-            if (!obstacle.get().enabled()) {
+        for (auto obstacleWrapper: *l) {
+            /* Obstacle Polygon */
+            const cogip::obstacles::Obstacle &obstacle = obstacleWrapper.get();
+
+            if (!obstacle.enabled()) {
                 continue;
             }
 
             /* Check if obstacle center is inside borders */
-            if (!_borders.is_point_inside(obstacle.get().center())) {
+            if (!_borders.is_point_inside(obstacle.center())) {
                 continue;
             }
 
             /* Check if the center of this obstacle is not in another obstacle */
-            if (is_point_in_obstacles(obstacle.get().center(), &obstacle.get())) {
+            if (is_point_in_obstacles(obstacle.center(), &obstacle)) {
                 continue;
             }
 
-            /* Build a bounding box around the obstacle center */
-            const cogip::obstacles::BoundingBox &bb = obstacle.get().bounding_box();
-
             /* Validate bounding box points */
-            for (auto &point: bb) {
+            for (auto &point: obstacle) {
                 if (!_borders.is_point_inside(point)) {
                     continue;
                 }
@@ -122,7 +124,7 @@ bool Avoidance::dijkstra()
         distance[i] = MAX_DISTANCE;
         parent[i] = -1;
     }
-    _pathChildren.clear();
+    _path.clear();
 
     /* Start point has a weight of 0 */
     distance[start] = 0;
@@ -168,24 +170,31 @@ bool Avoidance::dijkstra()
 
     /* Build child path from start to finish pose by reversing parent path */
     i = 1;
+    _path.push_front(_finishPose);
     while (parent[i] >= 0) {
-        _pathChildren.push_front(parent[i]);
+        _path.push_front(_validPoints[parent[i]]);
         i = parent[i];
     }
 
     _isAvoidanceComputed = true;
+    printPath();
     return _isAvoidanceComputed;
 }
 
-cogip::cogip_defs::Coords Avoidance::getPose(uint8_t index) const
+size_t Avoidance::getPathSize() const
 {
-    uint8_t i = 1;
+    return _path.size();
+}
 
-    if (index < _pathChildren.size()) {
-        i = _pathChildren[index];
+cogip::cogip_defs::Coords Avoidance::getPathPose(uint8_t index) const
+{
+    // Check if index is within range of _path
+    if (index < _path.size()) {
+        return _path[index];
     }
 
-    return _validPoints[i];
+    // If index is out of range, throw an exception
+    throw std::out_of_range("Index out of range in Avoidance::getPose");
 }
 
 bool Avoidance::buildGraph(const cogip::cogip_defs::Coords &start, const cogip::cogip_defs::Coords &finish)
@@ -195,6 +204,7 @@ bool Avoidance::buildGraph(const cogip::cogip_defs::Coords &start, const cogip::
     _isAvoidanceComputed = false;
 
     if (!_borders.is_point_inside(_finishPose)) {
+        std::cerr << "Finish pose outside borders !" << std::endl;
         return false;
     }
 
@@ -202,6 +212,7 @@ bool Avoidance::buildGraph(const cogip::cogip_defs::Coords &start, const cogip::
     for (auto l: _allObstacles) {
         for (auto obstacle: *l) {
             if (obstacle.get().is_point_inside(_finishPose)) {
+                std::cerr << "Finish pose inside obstacle !" << std::endl;
                 return false;
             }
             if (obstacle.get().is_point_inside(_startPose)) {
@@ -235,14 +246,14 @@ bool Avoidance::checkRecompute(const cogip::cogip_defs::Coords &start, const cog
 
 void Avoidance::printPath()
 {
-    _logger.debug() << "[";
+    std::cout << "[";
     if (_isAvoidanceComputed) {
-        for (auto i: _pathChildren) {
-            _logger.debug() << "{\"x\":" << _validPoints[i].x() << ",\"y\":" << _validPoints[i].y() << "},";
+
+        for (auto p: _path) {
+            std::cout << "{\"x\":" << p.x() << ",\"y\":" << p.y() << "},";
         }
-        _logger.debug() << "{\"x\":" << _finishPose.x() << ",\"y\":" << _finishPose.y() << "},";
     }
-    _logger.debug() << "]";
+    std::cout << "]" << std::endl;
 }
 
 const cogip::obstacles::ObstaclePolygon& Avoidance::getBorders() const

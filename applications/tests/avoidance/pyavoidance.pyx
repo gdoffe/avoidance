@@ -1,5 +1,7 @@
 # pyavoidance.pyx
 
+# cython: profile=True
+
 from libcpp.vector cimport vector
 from libcpp cimport bool
 from cython.operator cimport dereference as deref
@@ -7,6 +9,8 @@ from cython.operator cimport dereference as deref
 cdef extern from "avoidance/Avoidance.hpp" namespace "":
     cdef cppclass Avoidance:
         Avoidance(const ObstaclePolygon& borders)
+        size_t getPathSize()
+        Coords getPathPose(unsigned char index) const
         void addDynamicObstacle(Obstacle& obstacle)
         void removeDynamicObstacle(Obstacle& obstacle)
         void clearDynamicObstacles()
@@ -95,6 +99,19 @@ cdef class PyAvoidance:
 
     def __dealloc__(self):
         del self.c_avoidance
+
+    def get_path_size(self):
+        """
+        Get computed avoidance path size including start and stop pose.
+        """
+        return self.c_avoidance.getPathSize()
+
+    def get_path_pose(self, unsigned int index):
+        """
+        Get pose in computed avoidance path.
+        """
+        cdef Coords pose = self.c_avoidance.getPathPose(index)
+        return (pose.x(), pose.y())
 
     def add_dynamic_obstacle(self, PyObstacle obstacle):
         """

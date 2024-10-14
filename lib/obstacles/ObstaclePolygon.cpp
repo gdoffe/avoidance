@@ -2,6 +2,9 @@
 #include "obstacles/ObstaclePolygon.hpp"
 #include "utils.hpp"
 
+// System includes
+#include <cmath>
+
 namespace cogip {
 
 namespace obstacles {
@@ -49,11 +52,40 @@ static bool _is_segment_crossing_segment(
 }
 
 ObstaclePolygon::ObstaclePolygon(const std::vector<cogip_defs::Coords> & points)
-    : Obstacle(cogip_defs::Coords(0.0, 0.0), 0)
+    : Obstacle(calculateCentroid(points), 0)
 {
     for (const auto &point: points) {
         push_back(point);
     }
+}
+
+cogip_defs::Coords ObstaclePolygon::calculateCentroid(const std::vector<cogip_defs::Coords> &points) const {
+    double x_sum = 0.0;
+    double y_sum = 0.0;
+    double area = 0.0;
+
+    size_t n = points.size();
+    if (n < 3) {
+        // If there are less than 3 points, the "polygon" is degenerate.
+        return cogip_defs::Coords(0.0, 0.0);  // Return a default point, handle as needed
+    }
+
+    for (size_t i = 0; i < n; ++i) {
+        const auto &p1 = points[i];
+        const auto &p2 = points[(i + 1) % n];  // Next point, wrapping around
+        double cross_product = p1.x() * p2.y() - p2.x() * p1.y();
+        area += cross_product;
+        x_sum += (p1.x() + p2.x()) * cross_product;
+        y_sum += (p1.y() + p2.y()) * cross_product;
+    }
+
+    area *= 0.5;
+    double factor = 1.0 / (6.0 * std::fabs(area));
+
+    double centroid_x = x_sum * factor;
+    double centroid_y = y_sum * factor;
+
+    return cogip_defs::Coords(centroid_x, centroid_y);
 }
 
 bool ObstaclePolygon::is_point_inside(const cogip_defs::Coords &p) const {
